@@ -1,6 +1,8 @@
 import {asycnHandler} from "../utils/asyncHandler.js"
 import {ApiError} from "../utils/ApiError.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
+import { UploadOnCloudinary } from "../utils/Cloudinary.js";
+import {User} from "../models/User.model.js"
 
 const registerUser = asycnHandler ( async (req , res) => {
     const {Username , email , fullname , avatar , password} = req.body
@@ -11,28 +13,30 @@ const registerUser = asycnHandler ( async (req , res) => {
         throw new ApiError(400,"All fields are required")
     }
 
-    const existedUser = User.findOne({
+    const existedUser = await User.findOne({
         $or : [{Username},{email}]
     })
 
     if (existedUser) {
         throw new ApiError(409 , "user with this username or email already exists")
     }
-    const avatarLocalpath = req.files?.avatar[0]?.path 
+    // const avatarLocalpath = req.files?.avatar[0]?.path 
+    const avatarLocalpath =  req.files?.avatar?.[0]?.path;
+    console.log("avatar local file path :" , avatarLocalpath)
     if (!avatarLocalpath) {
-        throw new ApiError(400, "Avatar file is required")
+        throw new ApiError(400, "Avater file is required")
     }
 
-    const Avatar = UploadOnCloudinary(avatarLocalpath)
+    const Avatar = await UploadOnCloudinary(avatarLocalpath)
 
     if (!Avatar){
         throw new ApiError(400, "Avatar file is required")
     }
 
-    const CoverImageLocalpath = rep.files?.coverimg[0]?.path
-    const CoverImage = await UploadOnCloudinary(CoverImageLocalpath)
+    // const CoverImageLocalpath = rep.files?.coverimg[0]?.path
+    // const CoverImage = await UploadOnCloudinary(CoverImageLocalpath)
 
-    const User = await User.create({
+    const user = await User.create({
         fullname ,
         Avatar : avatar.url ,
         // coverImage :
@@ -41,7 +45,7 @@ const registerUser = asycnHandler ( async (req , res) => {
         Username : Username.toLowerCase()
     })
 
-    const CreateUser = User.findById(User._id).select(
+    const CreateUser = await User.findById(user._id).select(
         "-password -refreshToken"
     )
 

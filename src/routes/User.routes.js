@@ -7,15 +7,19 @@ router.route("/register").post(
     upload.fields(
         [
             {
-                name : "avater",
+                name : "avatar",
                 maxCount : 1 
-            } ,
-            {
-                name : "coverimg",
-                maxCount : 1
-            }
+            } 
+
         ]
     ) ,
     registerUser )
 
 export default router 
+
+
+
+            // {
+            //     name : "coverimg",
+            //     maxCount : 1
+            // }
