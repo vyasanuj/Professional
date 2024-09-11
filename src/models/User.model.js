@@ -80,7 +80,7 @@ Userschema.methods.generateAccesstoken = function () {
     )
 } 
 
-Userschema.methods.generaterefreshtoken = function () {
+Userschema.methods.generaterefereshtoken = function () {
     return jwt.sign (
         {
             _id : this._id    
