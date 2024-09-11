@@ -39,30 +39,39 @@ const registerUser = asycnHandler ( async (req , res) => {
     if (existedUser) {
         throw new ApiError(409 , "user with this username or email already exists")
     }
+<<<<<<< HEAD
     const avatarLocalpath =  req.files?.avatar?.[0]?.path;
     console.log("avatar local file path :" , avatarLocalpath)
     console.log("flies informations :" , req.files)
+=======
+    const avatarLocalpath = req.files?.avatar?.[0]?.path;
+    console.log("Avatar local file path:", avatarLocalpath);
+
+>>>>>>> c4afd9b40c3221f4b278f42c9fdc32f6cc744d51
     if (!avatarLocalpath) {
-        throw new ApiError(400, "Avater file is required")
+        throw new ApiError(400, "Avatar file not found in the request");
     }
 
-    const Avatar = await UploadOnCloudinary(avatarLocalpath)
+    const Avatar = await UploadOnCloudinary(avatarLocalpath);
+    console.log("Cloudinary upload result:", Avatar);
 
-    if (!Avatar){
-        throw new ApiError(400, "Avatar file is required")
+    if (!Avatar) {
+        throw new ApiError(500, "Error uploading avatar to Cloudinary");
     }
-
-    // const CoverImageLocalpath = rep.files?.coverimg[0]?.path
-    // const CoverImage = await UploadOnCloudinary(CoverImageLocalpath)
 
     const user = await User.create({
+<<<<<<< HEAD
         fullname ,
         avatar : Avatar.url ,
         // coverImage :
+=======
+        fullname,
+        avatar: Avatar.url,
+>>>>>>> c4afd9b40c3221f4b278f42c9fdc32f6cc744d51
         email,
         password,
-        Username : Username.toLowerCase()
-    })
+        Username: Username.toLowerCase()
+    });
 
     const CreateUser = await User.findById(user._id).select(
         "-password -refreshToken"

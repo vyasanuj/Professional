@@ -11,7 +11,6 @@ router.route("/register").post(
                 name : "avatar",
                 maxCount : 1 
             } 
-
         ]
     ) ,
     registerUser )
@@ -21,10 +20,3 @@ router.route("/register").post(
     router.route("/logout").post( jwtverify , LogoutUser)
 
 export default router 
-
-
-
-            // {
-            //     name : "coverimg",
-            //     maxCount : 1
-            // }
