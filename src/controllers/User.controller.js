@@ -39,15 +39,11 @@ const registerUser = asycnHandler ( async (req , res) => {
     if (existedUser) {
         throw new ApiError(409 , "user with this username or email already exists")
     }
-<<<<<<< HEAD
+    
     const avatarLocalpath =  req.files?.avatar?.[0]?.path;
     console.log("avatar local file path :" , avatarLocalpath)
     console.log("flies informations :" , req.files)
-=======
-    const avatarLocalpath = req.files?.avatar?.[0]?.path;
-    console.log("Avatar local file path:", avatarLocalpath);
 
->>>>>>> c4afd9b40c3221f4b278f42c9fdc32f6cc744d51
     if (!avatarLocalpath) {
         throw new ApiError(400, "Avatar file not found in the request");
     }
@@ -60,14 +56,9 @@ const registerUser = asycnHandler ( async (req , res) => {
     }
 
     const user = await User.create({
-<<<<<<< HEAD
         fullname ,
         avatar : Avatar.url ,
         // coverImage :
-=======
-        fullname,
-        avatar: Avatar.url,
->>>>>>> c4afd9b40c3221f4b278f42c9fdc32f6cc744d51
         email,
         password,
         Username: Username.toLowerCase()
