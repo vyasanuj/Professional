@@ -34,11 +34,8 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-<<<<<<< HEAD
-// console.log("Cloudinary Config:", cloudinary.config());
-=======
 console.log("Cloudinary Config:", cloudinary.config());
->>>>>>> c4afd9b40c3221f4b278f42c9fdc32f6cc744d51
+
 
 const UploadOnCloudinary = async (Localfilepath) => {
     try {
@@ -46,19 +43,10 @@ const UploadOnCloudinary = async (Localfilepath) => {
             console.error("No file path provided to UploadOnCloudinary");
             return null;
         }
-        
-<<<<<<< HEAD
         // if (!fs.existsSync(Localfilepath)) {
         //     console.error(`File not found at path: ${Localfilepath}`);
         //     return null;
         // }
-=======
-        if (!fs.existsSync(Localfilepath)) {
-            console.error(`File not found at path: ${Localfilepath}`);
-            return null;
-        }
->>>>>>> c4afd9b40c3221f4b278f42c9fdc32f6cc744d51
-
         const response = await cloudinary.uploader.upload(Localfilepath, {
             resource_type: "auto"
         })
