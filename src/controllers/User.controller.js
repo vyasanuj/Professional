@@ -39,7 +39,7 @@ const registerUser = asycnHandler ( async (req , res) => {
     if (existedUser) {
         throw new ApiError(409 , "user with this username or email already exists")
     }
-    
+
     const avatarLocalpath =  req.files?.avatar?.[0]?.path;
     console.log("avatar local file path :" , avatarLocalpath)
     console.log("flies informations :" , req.files)
@@ -86,8 +86,10 @@ const registerUser = asycnHandler ( async (req , res) => {
 const LoginUser = asycnHandler (async (req,res) => {
 
     const { email , Username , password } = req.body
-    console.log ("data coming or not",fullname) ;
+    // console.log ("data coming or not",fullname) ;
 
+    // if you want only one field 
+    // if (!(username || email))
     if (!Username && !email) {
         throw new ApiError(400 , "Username and email are required")
     }
@@ -101,6 +103,7 @@ const LoginUser = asycnHandler (async (req,res) => {
     }
     
     const isPasswordValid = await user.isPasswordCorrect(password) 
+    console.log("correct password is:" , password)
     if (!isPasswordValid){
         throw new ApiError(400 , "password is not valid") 
     }

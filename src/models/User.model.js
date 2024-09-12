@@ -56,11 +56,14 @@ const Userschema = new Schema(
 )
 Userschema.pre("save" , async function (next){
     if (!this.isModified("password")) return next();
+    // console.log("original password :",this.password)
     this.password = await bcrypt.hash( this.password , 10 )
+    // console.log("hashed password :",this.password)
     next() ;
 })
 
-Userschema.method.isPasswordCorrect = async function (password) {
+Userschema.methods.isPasswordCorrect = async function (password) {
+    console.log("password:",password,"this.password:",this.password)
     return await bcrypt.compare(password,this.password)
 }
 
