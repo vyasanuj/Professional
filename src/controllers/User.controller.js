@@ -13,6 +13,9 @@ const generateAccessandRefereshTokens = async(UserID) => {
 
         user.refreshToken = RefereshToken
         user.save({validateBeforeSave:false})
+        // console.log("Access Token:", accessToken);
+        // console.log("Refresh Token:", RefereshToken);
+
 
         return {accessToken,RefereshToken}
         
@@ -61,7 +64,8 @@ const registerUser = asycnHandler ( async (req , res) => {
         // coverImage :
         email,
         password,
-        Username: Username.toLowerCase()
+        Username
+        // Username: Username.toLowerCase()
     });
 
     const CreateUser = await User.findById(user._id).select(
@@ -151,8 +155,8 @@ const LogoutUser = asycnHandler(async (req,res) => {
 
     return res
     .status(200)
-    .clearcookie("accessToken" , options)
-    .clearcookie("RefereshToken" , options )
+    .clearCookie("accessToken" , options)
+    .clearCookie("RefereshToken" , options )
     .json(new ApiResponse(200 , {} , "User logged Out"))
 })
 

@@ -10,7 +10,7 @@ const Userschema = new Schema(
             required : true ,
             unique : true ,
             trim : true ,
-            lowercase : true ,
+            // lowercase : true ,
             index : true
 
         } , 
@@ -27,7 +27,8 @@ const Userschema = new Schema(
             type : String ,
             required : true ,
             trim : true ,
-            index : true 
+            index : true ,
+            lowercase : true 
         },
         avatar : {
             type : String , // cloudnary url
@@ -40,7 +41,7 @@ const Userschema = new Schema(
             type : String ,
             required : [true , "password is required"],
             unique : true ,
-            lowercase : true 
+            // lowercase : true 
         },
         watchhistory : [{
             type : Schema.Types.ObjectId,
@@ -54,6 +55,9 @@ const Userschema = new Schema(
         timestamps : true 
     }
 )
+
+
+
 Userschema.pre("save" , async function (next){
     if (!this.isModified("password")) return next();
     // console.log("original password :",this.password)
@@ -78,7 +82,7 @@ Userschema.methods.generateAccesstoken = function () {
         } , 
         process.env.ACCESS_TOKEN_SECRET ,
     {
-        expiresIn : ACCESS_TOKEN_EXPIRY
+        expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
     }
     )
 } 
@@ -90,7 +94,7 @@ Userschema.methods.generaterefereshtoken = function () {
         } ,
         process.env.REFRESH_TOKEN_SECRET ,
         {
-            expiresIn : REFRESH_TOKEN_EXPIRY 
+            expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
         }
     )
 }

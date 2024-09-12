@@ -13,12 +13,14 @@ try {
     
         const decodedtoken = jwt.verify(token , process.env.ACCESS_TOKEN_SECRET)
     
-        const user = await User.findById(decodedtoken?._id).select("-password - refreshToken")
+        // const user = await User.findById(decodedtoken?._id).select("-password - refreshToken")
+        const user = await User.findById(decodedtoken?._id).select("-password -refreshToken");
+
         if (!user){
             throw new ApiError (402 , "invalide Access Token")
         }
         
-        // yeeh smaj nahi aaya 
+      
         req.user = user ;
         next()
     }
