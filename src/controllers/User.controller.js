@@ -3,6 +3,7 @@ import {ApiError} from "../utils/ApiError.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 import { UploadOnCloudinary } from "../utils/Cloudinary.js";
 import {User} from "../models/User.model.js"
+import jwt from "jsonwebtoken"
 
 const generateAccessandRefereshTokens = async(UserID) => {
     try {
@@ -160,8 +161,58 @@ const LogoutUser = asycnHandler(async (req,res) => {
     .json(new ApiResponse(200 , {} , "User logged Out"))
 })
 
+const refreshAccessToken = asycnHandler (async(req,res) => {
+
+    const incomingrefreshTOken = req.cookie.RefereshToken||req.body.RefereshToken
+    
+    if (!incomingrefreshTOken) {
+        throw new ApiError (401 , "invalid refreshToken")
+    }
+
+    try {
+        const DecodedToken = jwt.verify(incomingrefreshTOken , process.env.REFRESH_TOKEN_SECRET)
+    
+        console.log("the value of decoded Token :",DecodedToken)
+    
+        const user = await User.findById(DecodedToken?._id)
+    
+        if (!user) {
+            throw  new ApiError (401 , "invalid refreshToken")
+        }
+    
+        if (incomingrefreshTOken !== user?.refreshToken) {
+            throw new ApiError (401 , "expired refresh token")
+        }
+    
+        const {accessToken , RefereshToken}=await generateAccessandRefereshTokens(user._id)
+    
+        const options = {
+            httpOnly : true ,
+            secure : true 
+        }
+    
+        res.status(200)
+        .cookie("accesstoken" , accessToken , options)
+        .cookie("refreshtoken" , RefereshToken , options)
+        .json(
+            new ApiResponse(
+                200 , 
+                {
+                    accessToken , newrefreshToken : RefereshToken
+                } ,
+                "access Token refreshed successfullly"
+            )
+        )
+    } catch (error) {
+        throw new ApiError (401 , error.message || "invalid refresh token")
+    }
+
+    
+})
+
 export {
     registerUser , 
     LoginUser,
-    LogoutUser
+    LogoutUser,
+    refreshAccessToken 
 }

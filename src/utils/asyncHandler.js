@@ -16,3 +16,13 @@ const asycnHandler = (requestHandler) => {
 // }
 
 export { asycnHandler }
+
+// advansed javascript function with try , catch statment 
+// const advanseedjsfunction = (takeFuncasParameter) => async(req,res,next) => {
+    // try catch statment 
+// }
+
+// with promises 
+// const func_name = (takefuncadparameter) => {
+//     return(req,res,next) => Promise.resolve(takefuncadparameter(req,res,next)).catch((error)=>next(error))
+// }
