@@ -206,13 +206,53 @@ const refreshAccessToken = asycnHandler (async(req,res) => {
     } catch (error) {
         throw new ApiError (401 , error.message || "invalid refresh token")
     }
-
-    
 })
 
+const Changepassword = asycnHandler (async(req,res)=>{
+    const {OldPassword,NewPassword}=req.body
+    const user = await User.findById(req.user?._id)
+    const checkpassword = await user.isPasswordCorrect(OldPassword)
+    if (!checkpassword){
+        throw new ApiError(400 ,"Plese enter a valid Password")
+    }
+    user.password = NewPassword
+    await user.save({validateBeforeSave:false})
+
+    return res.status(200)
+    .json(
+        new ApiResponse(200 , {} , "Password Changed SucceSsfully")
+    )
+})
+
+const getCurrentUser = asycnHandler (async(req,res)=>{
+    return res.status(200)
+    .json(
+        new ApiResponse (200 , req.user , "current User Fetched Succesfully" )
+    )
+})
+
+const updateAccountdeatils = asycnHandler (async(req, res) => {
+    const {fullname , Username } = req.body
+    if (!fullname && !Username) {
+        throw new ApiError(400 ,  "All Fields Are Reqiured")
+    }
+    const user = await User.findByIdAndUpdate(req.user?._id , {
+        $set : {
+            fullname ,
+            email
+        }
+    }).select("-password , -refreshToken")
+
+    return res.status(200)
+    .json(
+        new ApiResponse (200 , {fullname , Username}, "Username and fullname updated successsfully")
+    )
+
+})
 export {
     registerUser , 
     LoginUser,
     LogoutUser,
-    refreshAccessToken 
+    refreshAccessToken,
+    Changepassword
 }
