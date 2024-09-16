@@ -236,12 +236,15 @@ const updateAccountdeatils = asycnHandler (async(req, res) => {
     if (!fullname && !Username) {
         throw new ApiError(400 ,  "All Fields Are Reqiured")
     }
-    const user = await User.findByIdAndUpdate(req.user?._id , {
-        $set : {
+    const user = await User.findByIdAndUpdate(
+        req.user?._id , 
+        { 
+            $set :{
             fullname ,
             email
-        }
-    }).select("-password , -refreshToken")
+            } 
+        },
+        {new:true}).select("-password")
 
     return res.status(200)
     .json(
@@ -249,10 +252,39 @@ const updateAccountdeatils = asycnHandler (async(req, res) => {
     )
 
 })
+
+const UpdateUserAvatar = asycnHandler (async(req,res)=>{
+    const localfilepath = req.file?.path
+    if (!localfilepath){
+        throw new ApiError (400 , "local avatar file path is required" )
+    }
+    const avatar = await UploadOnCloudinary(localfilepath)
+
+    if (!avatar.url){
+        throw new ApiError (200 , "avatar url is required to upload on cloudinary")
+    }
+
+    const user = User.findByIdAndUpdate(req.user._id ,
+        {
+            $set : {
+                avatar : avatar.url
+            }
+        },{ new : true }
+    ).select("-password")
+    return res.status(200)
+    .json(200 , user ,  "avatar updated successfully")
+})
+
+
 export {
+
     registerUser , 
     LoginUser,
     LogoutUser,
     refreshAccessToken,
-    Changepassword
+    Changepassword,
+    getCurrentUser,
+    updateAccountdeatils,
+    UpdateUserAvatar
+
 }
